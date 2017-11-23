@@ -76,6 +76,96 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+  
+  @mixin fadeText($text-color, $direction : top, $offset : 2em, $transition: 0.5s ease-out) {  
+  // text-color : dark
+  $color: #fff;
+
+  // direction : top
+  $deg: 180deg;
+  $pos: bottom;
+  
+  @if($text-color == 'light') {
+    $color: #000;
+    mix-blend-mode: screen;
+  } @else {
+    mix-blend-mode: multiply;
+  }
+  
+  @if($direction == 'left') {
+    $deg: 90deg;
+    $pos: right;
+  } @elseif ($direction == 'right') {
+    $deg: -90deg;
+    $pos: left;
+  } @elseif ($direction == 'bottom') {
+    $deg: 0deg;
+    $pos: top;
+  }
+  
+  position: relative;
+
+  &::after {
+    background: linear-gradient($deg, transparent, $color $offset) no-repeat $pos center / 100% 100%;
+    
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    pointer-events: none;
+    transition: $transition;
+  }
+  
+  &:hover::after {
+    @if($direction == 'left' or $direction == 'right') {
+      background-size: 0% 100%;  
+    } @else {
+      background-size: 100% 0%;
+    }
+  }
+  
+}
+
+// Your text color should have good contrast (either very light or very dark, with the appropriate option passed above) or the entire block will start turning transparent
+
+p {
+  color: #fff;
+  @supports(mix-blend-mode: screen){
+     @include fadeText(light, top, 3rem);
+  } 
+}
+
+/* Pen styling */
+// This was on <body> but then it mysteriously broke on Chrome
+.wrapper {
+  background: #222 url(https://source.unsplash.com/yNGQ830uFB4/1600x900) 50% 50% / cover;
+  display: flex;
+  align-items: center;
+  font: 18px/1.5 'Roboto', sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  
+  &::before {
+    background: #222;
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    opacity: 0.5;
+  }
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 300;
+}
+
+.content {
+  color: #fff;
+  max-width: 600px;
+  text-align: center;
+  position: relative;
+}
+
 </style>
 <body class="w3-deep-purple">
 
@@ -147,6 +237,8 @@ input:checked + .slider:before {
   </header>
 
   <!-- About Section -->
+  <div class="wrapper">
+  <div class="content">
   <div class=" w3-container w3-content w3-justify w3-text-white w3-padding-64 w3-left-align" id="about">
     <h2 class="w3-text-white w3-animate-top">About me</h2>
     <hr style="width:200px" class="w3-opacity">
@@ -181,6 +273,8 @@ Last, my research interests are:
 <li>Human Computer Interaction </li> <br>
 </ul>
     </p>
+    </div>
+</div>
     <h3 class="w3-padding-16 w3-text-light-grey ">My Skills</h3>
 <hr style="width:200px" class="w3-opacity">
     <p class="w3-wide w3-text-white">Computer Networks</p>
